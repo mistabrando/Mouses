@@ -1,0 +1,56 @@
+<html>
+<head>
+	<style>
+		#box {
+			width: 800px;
+			height: 800px;
+			border: 2px solid;
+		}
+		.mouse {
+			width: 10px;
+			height: 10px;
+			background-color: red;
+			z-index: 2;
+			position: absolute;
+		}
+	</style>
+</head>
+<body>
+	<center>
+		<div id = 'mouseposition'></div>
+	</center>
+</body>
+<script src = 'http://code.jquery.com/jquery-latest.min.js'></script>
+<script src = '/socket.io/socket.io.js'></script>
+<script>
+
+ 	$(function(){
+
+		var socket = io.connect();
+		var myid = Math.floor((Math.random()*100000000)+1); //We assume no duplicates here
+		var allconnected = Array(); //we need to keep track of everybody's user id, so here it is
+
+ 		$('body').mousemove(function(e){
+ 			$('#mouseposition').text("Mouse is at" + " x : " + e.pageX + " y : " + e.pageY);
+ 			socket.emit('mymouseposition', { x : e.pageX, y : e.pageY, id: myid});
+ 		});
+
+ 		socket.on('othermouseposition', function(data){
+ 			if(allconnected.indexOf(data.id) != -1)
+ 			{
+ 				$("#" + data.id).css({
+ 					'left' : data.x + 'px',
+ 					'top' : data.y + 'px' 
+ 				});
+ 			}
+ 			else
+ 			{
+ 				allconnected.push(data.id);
+ 				$('body').append("<div style = 'left: " + data.x + "px; top: " + data.y + "px;' class = 'mouse' id = '" + data.id + "'></div>");
+ 			}
+ 		});
+
+ 	});
+
+</script>
+</html>

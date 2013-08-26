@@ -1,0 +1,10 @@
+{
+    "name": "mouse",
+    "version": "0.0.0",
+    "description": "simple",
+    "dependencies": {
+        "socket.io": "latest",
+        "express": "latest"
+    },
+    "author": "cheng"
+}
